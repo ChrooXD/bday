@@ -88,6 +88,15 @@
       pointer-events: auto;
     }
 
+    #moodboard-gif {
+      position: absolute;
+      top: 6%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      pointer-events: none;
+    }
+
     /* ---- CONFETTI VIDEO ---- */
 
     #confetti-video {
@@ -135,7 +144,9 @@
     </div>
   </div>
 
-  <div id="moodboard"></div>
+  <div id="moodboard">
+    <img id="moodboard-gif" src="jaybday.gif" alt="">
+  </div>
 
   <video id="confetti-video" src="confetti.webm" playsinline preload="auto" loop></video>
   <button id="mute-btn">mute</button>
