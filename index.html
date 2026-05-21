@@ -121,6 +121,17 @@
 
     /* ---- CONFETTI VIDEO ---- */
 
+    #confetti-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 19;
+      pointer-events: none;
+    }
+
     #confetti-video {
       display: none;
       position: fixed;
@@ -128,8 +139,6 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      mix-blend-mode: screen;
-      filter: saturate(1.5) contrast(1.15) brightness(1.1);
       pointer-events: none;
       z-index: 20;
     }
@@ -179,6 +188,7 @@
     </div>
   </div>
 
+  <div id="confetti-bg"></div>
   <video id="confetti-video" src="happybday.mp4" playsinline preload="auto"></video>
   <button id="mute-btn">mute</button>
 
@@ -188,6 +198,7 @@
     const muteBtn        = document.getElementById('mute-btn');
     const box            = document.getElementById('box');
     const confettiVideo  = document.getElementById('confetti-video');
+    const confettiBg     = document.getElementById('confetti-bg');
 
     const audio1 = new Audio('happybday%20(2).m4a');
     audio1.loop = true;
@@ -199,10 +210,16 @@
       moodboard.classList.add('visible');
       muteBtn.style.display = 'block';
 
+      confettiBg.style.display = 'block';
+      requestAnimationFrame(() => confettiBg.style.opacity = '1');
       confettiVideo.style.display = 'block';
       confettiVideo.play();
       confettiVideo.addEventListener('ended', () => {
-        confettiVideo.style.display = 'none';
+        confettiBg.style.opacity = '0';
+        confettiBg.addEventListener('transitionend', () => {
+          confettiBg.style.display = 'none';
+          confettiVideo.style.display = 'none';
+        }, { once: true });
       }, { once: true });
     });
 
