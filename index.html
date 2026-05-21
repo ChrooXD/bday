@@ -119,26 +119,14 @@
       display: none;
     }
 
-    /* ---- CONFETTI VIDEO ---- */
+    /* ---- CONFETTI CANVAS ---- */
 
-    #confetti-bg {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: #000;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-      z-index: 19;
-      pointer-events: none;
-    }
-
-    #confetti-video {
+    #confetti-canvas {
       display: none;
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
       pointer-events: none;
       z-index: 20;
     }
@@ -188,8 +176,8 @@
     </div>
   </div>
 
-  <div id="confetti-bg"></div>
-  <video id="confetti-video" src="happybday.mp4" playsinline preload="auto"></video>
+  <video id="confetti-video" src="happybday.mp4" playsinline preload="auto" style="display:none"></video>
+  <canvas id="confetti-canvas"></canvas>
   <button id="mute-btn">mute</button>
 
   <script>
@@ -198,10 +186,29 @@
     const muteBtn        = document.getElementById('mute-btn');
     const box            = document.getElementById('box');
     const confettiVideo  = document.getElementById('confetti-video');
-    const confettiBg     = document.getElementById('confetti-bg');
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const confettiCtx    = confettiCanvas.getContext('2d', { willReadFrequently: true });
 
     const audio1 = new Audio('happybday%20(2).m4a');
     audio1.loop = true;
+
+    function lumaKey() {
+      if (confettiVideo.paused || confettiVideo.ended) return;
+      const w = confettiVideo.videoWidth;
+      const h = confettiVideo.videoHeight;
+      if (confettiCanvas.width !== w)  confettiCanvas.width  = w;
+      if (confettiCanvas.height !== h) confettiCanvas.height = h;
+      confettiCtx.drawImage(confettiVideo, 0, 0);
+      const frame = confettiCtx.getImageData(0, 0, w, h);
+      const d = frame.data;
+      for (let i = 0; i < d.length; i += 4) {
+        const luma = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+        // smooth falloff: fully transparent below 30, fully opaque above 60
+        d[i + 3] = luma < 30 ? 0 : luma < 60 ? Math.round(((luma - 30) / 30) * 255) : 255;
+      }
+      confettiCtx.putImageData(frame, 0, 0);
+      requestAnimationFrame(lumaKey);
+    }
 
     box.addEventListener('click', () => {
       audio1.play();
@@ -210,16 +217,11 @@
       moodboard.classList.add('visible');
       muteBtn.style.display = 'block';
 
-      confettiBg.style.display = 'block';
-      requestAnimationFrame(() => confettiBg.style.opacity = '1');
-      confettiVideo.style.display = 'block';
+      confettiCanvas.style.display = 'block';
       confettiVideo.play();
+      lumaKey();
       confettiVideo.addEventListener('ended', () => {
-        confettiBg.style.opacity = '0';
-        confettiBg.addEventListener('transitionend', () => {
-          confettiBg.style.display = 'none';
-          confettiVideo.style.display = 'none';
-        }, { once: true });
+        confettiCanvas.style.display = 'none';
       }, { once: true });
     });
 
