@@ -78,58 +78,14 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.7s ease 0.2s;
-      padding: 64px 24px 96px;
-      min-height: 100vh;
+      position: fixed;
+      inset: 0;
+      background: url('Jaybday.png') center / cover no-repeat;
     }
 
     #moodboard.visible {
       opacity: 1;
       pointer-events: auto;
-    }
-
-    #moodboard h1 {
-      text-align: center;
-      font-size: clamp(2rem, 5vw, 3.6rem);
-      font-weight: 300;
-      font-style: italic;
-      letter-spacing: 0.03em;
-      color: #4A3B31;
-      margin-bottom: 52px;
-    }
-
-    #grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: 240px 240px 210px 210px;
-      grid-template-areas:
-        "a a b"
-        "c d b"
-        "e e f"
-        "g h h";
-      gap: 8px;
-      max-width: 920px;
-      margin: 0 auto;
-    }
-
-    .cell { overflow: hidden; background: #EDE4D0; }
-    .cell:nth-child(1) { grid-area: a; }
-    .cell:nth-child(2) { grid-area: b; }
-    .cell:nth-child(3) { grid-area: c; }
-    .cell:nth-child(4) { grid-area: d; }
-    .cell:nth-child(5) { grid-area: e; }
-    .cell:nth-child(6) { grid-area: f; }
-    .cell:nth-child(7) { grid-area: g; }
-    .cell:nth-child(8) { grid-area: h; }
-
-    .cell img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .cell img.missing {
-      display: none;
     }
 
     /* ---- CONFETTI VIDEO ---- */
@@ -179,19 +135,7 @@
     </div>
   </div>
 
-  <div id="moodboard">
-    <h1>Hyvää syntymäpäivää, Jay</h1>
-    <div id="grid">
-      <div class="cell"><img src="images/1.jpg" alt="" onerror="this.classList.add('missing')"></div>
-      <div class="cell"><img src="images/2.jpg" alt="" onerror="this.classList.add('missing')"></div>
-      <div class="cell"><img src="images/3.jpg" alt="" onerror="this.classList.add('missing')"></div>
-      <div class="cell"><img src="images/4.jpg" alt="" onerror="this.classList.add('missing')"></div>
-      <div class="cell"><img src="images/5.jpg" alt="" onerror="this.classList.add('missing')"></div>
-      <div class="cell"><img src="images/6.jpg" alt="" onerror="this.classList.add('missing')"></div>
-      <div class="cell"><img src="images/7.jpg" alt="" onerror="this.classList.add('missing')"></div>
-      <div class="cell"><img src="images/8.jpg" alt="" onerror="this.classList.add('missing')"></div>
-    </div>
-  </div>
+  <div id="moodboard"></div>
 
   <video id="confetti-video" src="confetti.webm" playsinline preload="auto" loop></video>
   <button id="mute-btn">mute</button>
