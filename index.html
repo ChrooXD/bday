@@ -176,7 +176,7 @@
     </div>
   </div>
 
-  <video id="confetti-video" src="happybday.mp4" playsinline preload="auto" style="display:none"></video>
+  <video id="confetti-video" src="happybday.mp4" playsinline preload="auto" crossorigin="anonymous" style="display:none"></video>
   <canvas id="confetti-canvas"></canvas>
   <button id="mute-btn">mute</button>
 
@@ -219,9 +219,18 @@
 
       confettiCanvas.style.display = 'block';
       confettiVideo.play();
-      lumaKey();
+      confettiVideo.addEventListener('playing', () => {
+        try {
+          lumaKey();
+        } catch (e) {
+          // fallback: just show video with screen blend if canvas access blocked
+          confettiCanvas.style.display = 'none';
+          confettiVideo.style.cssText = 'display:block;position:fixed;inset:0;width:100%;height:100%;object-fit:cover;mix-blend-mode:screen;pointer-events:none;z-index:20';
+        }
+      }, { once: true });
       confettiVideo.addEventListener('ended', () => {
         confettiCanvas.style.display = 'none';
+        confettiVideo.style.display = 'none';
       }, { once: true });
     });
 
