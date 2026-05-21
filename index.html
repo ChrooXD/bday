@@ -173,20 +173,15 @@
     const muteBtn   = document.getElementById('mute-btn');
     const box       = document.getElementById('box');
 
-    const visits = parseInt(localStorage.getItem('bdayVisits') || '0') + 1;
-    localStorage.setItem('bdayVisits', visits);
+    const audio1 = new Audio('happybday.m4a');
+    audio1.loop = true;
 
-    const audio = new Audio();
-    if (visits <= 2) {
-      audio.src = 'happybday.m4a';
-      audio.loop = false;
-    } else {
-      audio.src = 'Happy%20Birthday%20lyrics%20Finnish%20%20Laulu%20syntym%C3%A4p%C3%A4iv%C3%A4juhliin!.mp3';
-      audio.loop = true;
-    }
+    const audio2 = new Audio('Happy%20Birthday%20lyrics%20Finnish%20%20Laulu%20syntym%C3%A4p%C3%A4iv%C3%A4juhliin!.mp3');
+    audio2.loop = true;
 
     box.addEventListener('click', () => {
-      audio.play();
+      audio1.play();
+      audio2.play();
 
       landing.classList.add('hidden');
       moodboard.classList.add('visible');
@@ -199,8 +194,10 @@
     });
 
     muteBtn.addEventListener('click', () => {
-      audio.muted = !audio.muted;
-      muteBtn.textContent = audio.muted ? 'unmute' : 'mute';
+      const muted = !audio1.muted;
+      audio1.muted = muted;
+      audio2.muted = muted;
+      muteBtn.textContent = muted ? 'unmute' : 'mute';
     });
   </script>
 </body>
