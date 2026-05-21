@@ -119,6 +119,20 @@
       display: none;
     }
 
+    /* ---- CONFETTI VIDEO ---- */
+
+    #confetti-video {
+      display: none;
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      z-index: 20;
+    }
+
     /* ---- MUTE BUTTON ---- */
 
     #mute-btn {
@@ -164,14 +178,15 @@
     </div>
   </div>
 
+  <video id="confetti-video" src="AdobeStock_328367003.mov" playsinline preload="auto"></video>
   <button id="mute-btn">mute</button>
 
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <script>
-    const landing   = document.getElementById('landing');
-    const moodboard = document.getElementById('moodboard');
-    const muteBtn   = document.getElementById('mute-btn');
-    const box       = document.getElementById('box');
+    const landing        = document.getElementById('landing');
+    const moodboard      = document.getElementById('moodboard');
+    const muteBtn        = document.getElementById('mute-btn');
+    const box            = document.getElementById('box');
+    const confettiVideo  = document.getElementById('confetti-video');
 
     const audio1 = new Audio('happybday.m4a');
     audio1.loop = true;
@@ -187,10 +202,11 @@
       moodboard.classList.add('visible');
       muteBtn.style.display = 'block';
 
-      const colors = ['#D4A96A', '#C4B49A', '#E8D5B7', '#A89070', '#BFA882'];
-      confetti({ particleCount: 90, spread: 65, angle: 60,  origin: { x: 0,   y: 0.65 }, colors });
-      confetti({ particleCount: 90, spread: 65, angle: 120, origin: { x: 1,   y: 0.65 }, colors });
-      setTimeout(() => confetti({ particleCount: 60, spread: 100, origin: { x: 0.5, y: 0.1 }, colors }), 350);
+      confettiVideo.style.display = 'block';
+      confettiVideo.play();
+      confettiVideo.addEventListener('ended', () => {
+        confettiVideo.style.display = 'none';
+      }, { once: true });
     });
 
     muteBtn.addEventListener('click', () => {
