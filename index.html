@@ -18,7 +18,7 @@
       background: #F5EFE0;
       font-family: 'Cormorant Garamond', Georgia, serif;
       min-height: 100vh;
-      cursor: url('ezgif-7ec454337438fc35.gif') 16 16, auto;
+      cursor: none;
     }
 
     /* ---- LANDING ---- */
@@ -135,6 +135,16 @@
       border-color: #7A6558;
       color: #3E2F26;
     }
+
+    #fake-cursor {
+      position: fixed;
+      pointer-events: none;
+      z-index: 99999;
+      width: 64px;
+      transform: translate(-16px, -16px);
+      top: -100px;
+      left: -100px;
+    }
   </style>
 </head>
 <body>
@@ -152,6 +162,7 @@
 
   <video id="confetti-video" src="confetti.webm" playsinline preload="auto" loop></video>
   <button id="mute-btn">mute</button>
+  <img id="fake-cursor" src="ezgif-7ec454337438fc35.gif" alt="">
 
   <script>
     const landing        = document.getElementById('landing');
@@ -177,6 +188,12 @@
     muteBtn.addEventListener('click', () => {
       audio1.muted = !audio1.muted;
       muteBtn.textContent = audio1.muted ? 'unmute' : 'mute';
+    });
+
+    const fakeCursor = document.getElementById('fake-cursor');
+    document.addEventListener('mousemove', e => {
+      fakeCursor.style.left = e.clientX + 'px';
+      fakeCursor.style.top = e.clientY + 'px';
     });
   </script>
 </body>
