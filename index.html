@@ -119,17 +119,28 @@
       display: none;
     }
 
-    /* ---- YOUTUBE (hidden) ---- */
+    /* ---- MUTE BUTTON ---- */
 
-    #yt-player {
+    #mute-btn {
+      display: none;
       position: fixed;
-      width: 1px;
-      height: 1px;
-      bottom: 0;
-      left: 0;
-      border: none;
-      opacity: 0;
-      pointer-events: none;
+      bottom: 28px;
+      right: 32px;
+      border: 1px solid #B8A898;
+      background: transparent;
+      color: #6B5A4E;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 0.95rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+
+    #mute-btn:hover {
+      border-color: #7A6558;
+      color: #3E2F26;
     }
   </style>
 </head>
@@ -153,33 +164,43 @@
     </div>
   </div>
 
-  <iframe id="yt-player" allow="autoplay"></iframe>
+  <button id="mute-btn">mute</button>
 
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
   <script>
-    // Swap this YouTube video ID to change the song
-    const YOUTUBE_ID = 'sXHDC6yEDYU';
-
-    const landing  = document.getElementById('landing');
+    const landing   = document.getElementById('landing');
     const moodboard = document.getElementById('moodboard');
-    const ytPlayer = document.getElementById('yt-player');
-    const box      = document.getElementById('box');
+    const muteBtn   = document.getElementById('mute-btn');
+    const box       = document.getElementById('box');
+
+    const visits = parseInt(localStorage.getItem('bdayVisits') || '0') + 1;
+    localStorage.setItem('bdayVisits', visits);
+
+    const audio = new Audio();
+    if (visits <= 2) {
+      audio.src = 'happybday.m4a';
+      audio.loop = false;
+    } else {
+      audio.src = 'Happy%20Birthday%20lyrics%20Finnish%20%20Laulu%20syntym%C3%A4p%C3%A4iv%C3%A4juhliin!.mp3';
+      audio.loop = true;
+    }
 
     box.addEventListener('click', () => {
-      // Start music via user gesture so autoplay is allowed
-      ytPlayer.src =
-        `https://www.youtube.com/embed/${YOUTUBE_ID}` +
-        `?autoplay=1&loop=1&playlist=${YOUTUBE_ID}&controls=0&disablekb=1&iv_load_policy=3`;
+      audio.play();
 
-      // Transition screens
       landing.classList.add('hidden');
       moodboard.classList.add('visible');
+      muteBtn.style.display = 'block';
 
-      // Confetti — warm palette, three bursts
       const colors = ['#D4A96A', '#C4B49A', '#E8D5B7', '#A89070', '#BFA882'];
       confetti({ particleCount: 90, spread: 65, angle: 60,  origin: { x: 0,   y: 0.65 }, colors });
       confetti({ particleCount: 90, spread: 65, angle: 120, origin: { x: 1,   y: 0.65 }, colors });
       setTimeout(() => confetti({ particleCount: 60, spread: 100, origin: { x: 0.5, y: 0.1 }, colors }), 350);
+    });
+
+    muteBtn.addEventListener('click', () => {
+      audio.muted = !audio.muted;
+      muteBtn.textContent = audio.muted ? 'unmute' : 'mute';
     });
   </script>
 </body>
