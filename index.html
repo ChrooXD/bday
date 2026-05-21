@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Siiri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #F5EFE0;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      min-height: 100vh;
+    }
+
+    /* ---- LANDING ---- */
+
+    #landing {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F5EFE0;
+      z-index: 10;
+      transition: opacity 0.5s ease;
+    }
+
+    #landing.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #box {
+      width: 280px;
+      height: 160px;
+      border: 1px solid #B8A898;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.4rem;
+      font-weight: 300;
+      letter-spacing: 0.1em;
+      color: #6B5A4E;
+      transition: border-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+    }
+
+    #box:hover {
+      border-color: #7A6558;
+      color: #3E2F26;
+    }
+
+    /* ---- MOODBOARD ---- */
+
+    #moodboard {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.7s ease 0.2s;
+      padding: 64px 24px 96px;
+      min-height: 100vh;
+    }
+
+    #moodboard.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #moodboard h1 {
+      text-align: center;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.03em;
+      color: #4A3B31;
+      margin-bottom: 52px;
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 240px 240px 210px 210px;
+      grid-template-areas:
+        "a a b"
+        "c d b"
+        "e e f"
+        "g h h";
+      gap: 8px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .cell { overflow: hidden; background: #EDE4D0; }
+    .cell:nth-child(1) { grid-area: a; }
+    .cell:nth-child(2) { grid-area: b; }
+    .cell:nth-child(3) { grid-area: c; }
+    .cell:nth-child(4) { grid-area: d; }
+    .cell:nth-child(5) { grid-area: e; }
+    .cell:nth-child(6) { grid-area: f; }
+    .cell:nth-child(7) { grid-area: g; }
+    .cell:nth-child(8) { grid-area: h; }
+
+    .cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cell img.missing {
+      display: none;
+    }
+
+    /* ---- YOUTUBE (hidden) ---- */
+
+    #yt-player {
+      position: fixed;
+      width: 1px;
+      height: 1px;
+      bottom: 0;
+      left: 0;
+      border: none;
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="landing">
+    <div id="box">For Siiri</div>
+  </div>
+
+  <div id="moodboard">
+    <h1>Paljon onnea vaan, Siiri</h1>
+    <div id="grid">
+      <div class="cell"><img src="images/1.jpg" alt="" onerror="this.classList.add('missing')"></div>
+      <div class="cell"><img src="images/2.jpg" alt="" onerror="this.classList.add('missing')"></div>
+      <div class="cell"><img src="images/3.jpg" alt="" onerror="this.classList.add('missing')"></div>
+      <div class="cell"><img src="images/4.jpg" alt="" onerror="this.classList.add('missing')"></div>
+      <div class="cell"><img src="images/5.jpg" alt="" onerror="this.classList.add('missing')"></div>
+      <div class="cell"><img src="images/6.jpg" alt="" onerror="this.classList.add('missing')"></div>
+      <div class="cell"><img src="images/7.jpg" alt="" onerror="this.classList.add('missing')"></div>
+      <div class="cell"><img src="images/8.jpg" alt="" onerror="this.classList.add('missing')"></div>
+    </div>
+  </div>
+
+  <iframe id="yt-player" allow="autoplay"></iframe>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script>
+    // Swap this YouTube video ID to change the song
+    const YOUTUBE_ID = 'sXHDC6yEDYU';
+
+    const landing  = document.getElementById('landing');
+    const moodboard = document.getElementById('moodboard');
+    const ytPlayer = document.getElementById('yt-player');
+    const box      = document.getElementById('box');
+
+    box.addEventListener('click', () => {
+      // Start music via user gesture so autoplay is allowed
+      ytPlayer.src =
+        `https://www.youtube.com/embed/${YOUTUBE_ID}` +
+        `?autoplay=1&loop=1&playlist=${YOUTUBE_ID}&controls=0&disablekb=1&iv_load_policy=3`;
+
+      // Transition screens
+      landing.classList.add('hidden');
+      moodboard.classList.add('visible');
+
+      // Confetti — warm palette, three bursts
+      const colors = ['#D4A96A', '#C4B49A', '#E8D5B7', '#A89070', '#BFA882'];
+      confetti({ particleCount: 90, spread: 65, angle: 60,  origin: { x: 0,   y: 0.65 }, colors });
+      confetti({ particleCount: 90, spread: 65, angle: 120, origin: { x: 1,   y: 0.65 }, colors });
+      setTimeout(() => confetti({ particleCount: 60, spread: 100, origin: { x: 0.5, y: 0.1 }, colors }), 350);
+    });
+  </script>
+</body>
+</html>
